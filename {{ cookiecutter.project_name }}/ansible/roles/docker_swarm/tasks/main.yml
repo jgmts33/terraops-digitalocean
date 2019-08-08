@@ -1,0 +1,14 @@
+- import_tasks: check_swarm.yml
+  tags:
+    - swarm
+    - swarm:check
+
+- import_tasks: create_swarm.yml
+  tags:
+    - swarm
+    - swarm:create
+
+- import_tasks: join_nodes.yml
+  tags:
+    - swarm
+    - swarm:join

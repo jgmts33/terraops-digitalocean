@@ -1,0 +1,4 @@
+- import_tasks: copy_configuration.yml
+  tags:
+    - vpn
+    - vpn:copy

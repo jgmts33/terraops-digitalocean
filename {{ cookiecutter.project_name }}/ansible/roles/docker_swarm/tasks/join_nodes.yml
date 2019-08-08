@@ -1,0 +1,11 @@
+{% raw -%}
+- name: get join-token for managers
+  shell: docker swarm join-token -q manager
+  register: swarm_manager_token
+  when: "'swarm_manager_deploy' in groups and inventory_hostname == swarm_manager_primary"
+  changed_when: false
+
+- name: add managers to swarm
+  shell: docker swarm join --token {{ hostvars[swarm_manager_primary].swarm_manager_token.stdout }} {{ swarm_manager_primary }}
+  when: "'swarm_manager_deploy' in group_names and inventory_hostname != swarm_manager_primary"
+{% endraw -%}

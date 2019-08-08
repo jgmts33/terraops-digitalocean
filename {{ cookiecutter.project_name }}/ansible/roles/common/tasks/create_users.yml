@@ -1,0 +1,22 @@
+{% raw -%}
+- name: create users
+  user:
+    name: "{{ item.key }}"
+    shell: "/bin/bash"
+  with_dict: "{{ cookiecutter.users }}"
+
+- name: assign public keys
+  authorized_key:
+    user: "{{ item.key }}"
+    state: present
+    key: "{{ item.value }}"
+    exclusive: true
+  with_dict: "{{ cookiecutter.users }}"
+
+- name: add users to sudo group
+  user:
+    name: "{{ item.key }}"
+    groups: sudo
+    append: true
+  with_dict: "{{ cookiecutter.users }}"
+{% endraw -%}

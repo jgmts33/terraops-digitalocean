@@ -1,0 +1,22 @@
+- name: install prerequisites
+  apt:
+    name: {% raw %}"{{item}}"{% endraw %}
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
+
+- name: check if Docker's repository is added
+  shell: "find /etc/apt/ -name *.list | xargs cat | grep  ^[[:space:]]*deb | grep docker | cat"
+  register: docker_repo_exists
+  changed_when: false
+
+- name: add Docker's GPG key
+  shell: "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -"
+  when: "docker_repo_exists.stdout_lines == []"
+
+- name: add Docker's repository
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable
+    state: present

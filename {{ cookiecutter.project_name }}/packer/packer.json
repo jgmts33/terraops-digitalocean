@@ -1,0 +1,24 @@
+{% raw -%}
+{
+  "variables": {
+    "region": "{{env `REGION`}}"
+  },
+
+  "builders": [{
+    "type": "digitalocean",
+    "image": "ubuntu-18-04-x64",
+    "region": "{{user `region`}}",
+    "size": "s-1vcpu-1gb",
+    "snapshot_name": "docker-{{timestamp}}",
+    "ssh_username": "root"
+  }],
+
+  "provisioners": [
+    {
+      "type": "ansible",
+      "playbook_file": "../ansible/docker.yml",
+      "user": "ubuntu"
+    }
+  ]
+}
+{% endraw -%}

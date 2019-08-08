@@ -1,0 +1,10 @@
+- name: copy openvpn
+  synchronize:
+    src: "openvpn"
+    dest: "/data"
+    owner: no
+    group: no
+  notify: openvpn configuration changed
+
+- name: restart openvpn if necessary
+  meta: flush_handlers

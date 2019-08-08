@@ -1,0 +1,5 @@
+{% raw -%}
+- name: initialize a new swarm
+  shell: "docker swarm init --advertise-addr {{ inventory_hostname }}"
+  when: "'swarm_manager_active' not in groups and inventory_hostname == swarm_manager_primary"
+{% endraw -%}

@@ -1,0 +1,6 @@
+- name: docker configuration changed
+  shell: systemctl daemon-reload
+  notify: restart docker
+
+- name: restart docker
+  service: name=docker state=restarted

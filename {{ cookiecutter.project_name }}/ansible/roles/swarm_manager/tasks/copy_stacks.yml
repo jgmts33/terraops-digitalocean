@@ -1,0 +1,18 @@
+{% raw -%}
+- name: create stacks directory
+  file:
+    path: /data/stacks
+    state: directory
+    owner: root
+    group: docker
+    mode: 0770
+
+- name: copy stacks
+  template:
+    src: "{{ item.template }}"
+    dest: "/data/stacks/{{ item.name }}"
+    owner: root
+    group: docker
+    mode: 0660
+  with_items: "{{ stacks }}"
+{% endraw -%}

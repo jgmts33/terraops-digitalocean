@@ -1,0 +1,14 @@
+- import_tasks: copy_stacks.yml
+  tags:
+    - swarm_manager
+    - swarm_manager:stacks
+
+- import_tasks: create_secrets.yml
+  tags:
+    - swarm_manager
+    - swarm_manager:secrets
+
+- import_tasks: deploy_stacks.yml
+  tags:
+    - swarm_manager
+    - swarm_manager:deploy

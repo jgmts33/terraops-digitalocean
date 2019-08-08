@@ -1,0 +1,32 @@
+{% raw -%}
+- name: determine swarm status
+  shell: >
+    docker info | egrep '^Swarm: ' | cut -d ' ' -f2
+  register: swarm_status
+  changed_when: false
+
+- name: create swarm_manager_active group
+  add_host:
+    hostname: "{{ item }}"
+    groups: swarm_manager_active
+  with_items: "{{ play_hosts }}"
+  when: "'active' in hostvars[item].swarm_status.stdout_lines"
+  changed_when: false
+  run_once: true
+
+- name: create swarm_manager_deploy group
+  add_host:
+    hostname: "{{ item }}"
+    groups: swarm_manager_deploy
+  with_items: "{{ play_hosts }}"
+  when: "'active' not in hostvars[item].swarm_status.stdout_lines"
+  changed_when: false
+  run_once: true
+
+- name: designate a primary manager node
+  set_fact:
+    swarm_manager_primary: "{{ item }}"
+  with_items: "{{ play_hosts }}"
+  when: "'swarm_manager_active' in hostvars[item].group_names or 'swarm_manager_active' not in groups"
+  run_once: true
+{% endraw -%}

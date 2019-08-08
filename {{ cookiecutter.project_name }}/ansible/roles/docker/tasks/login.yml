@@ -1,0 +1,21 @@
+{% raw -%}
+- name: add users to Docker group
+  user:
+    name: "{{ item }}"
+    groups: docker
+    append: true
+  with_items: "{{ docker_users }}"
+{% endraw -%}
+
+{% if cookiecutter.registry_url %}
+- name: login to container registry
+  docker_login:
+    registry_url: "{{ cookiecutter.registry_url }}"
+{%- raw %}
+    username: "{{ registry_username }}"
+    email: "{{ registry_email }}"
+    password: "{{ registry_password }}"
+    config_path: "/home/{{ item }}/.docker/config.json"
+  with_items: "{{ docker_users }}"
+{% endraw -%}
+{% endif -%}

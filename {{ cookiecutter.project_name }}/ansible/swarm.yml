@@ -1,0 +1,13 @@
+---
+- name:
+  become: true
+  become_user: root
+  hosts: all
+  any_errors_fatal: true
+  vars_files:
+    - vars.yml
+    - ../config/config.yml
+    - ../config/secrets.yml
+  roles:
+    - docker_swarm
+    - swarm_manager

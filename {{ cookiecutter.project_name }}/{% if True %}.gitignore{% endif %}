@@ -1,0 +1,18 @@
+# Configuration
+/config/*
+!/config/stacks
+
+# Terraform
+.terraform*
+terraform.tfstate*
+
+# VPN
+vpn/private
+vpn/certificates
+ansible/roles/vpn/files/openvpn
+
+# Mac
+.DS_Store
+
+# Ansible
+*.retry

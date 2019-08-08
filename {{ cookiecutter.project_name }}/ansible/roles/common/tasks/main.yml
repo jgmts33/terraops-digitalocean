@@ -1,0 +1,24 @@
+- import_tasks: update.yml
+  tags:
+    - common
+    - common:update
+
+- import_tasks: install_dependencies.yml
+  tags:
+    - common
+    - common:deps
+
+- import_tasks: set_hostname.yml
+  tags:
+    - common
+    - common:hostname
+
+- import_tasks: harden.yml
+  tags:
+    - common
+    - common:harden
+
+- import_tasks: create_users.yml
+  tags:
+    - common
+    - common:users

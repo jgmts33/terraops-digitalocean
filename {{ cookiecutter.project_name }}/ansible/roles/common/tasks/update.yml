@@ -1,0 +1,4 @@
+- name: update all packages
+  apt:
+    upgrade: dist
+    update_cache: true

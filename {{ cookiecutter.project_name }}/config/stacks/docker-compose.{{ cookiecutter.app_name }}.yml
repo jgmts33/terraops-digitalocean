@@ -1,0 +1,132 @@
+version: '3.4'
+
+services:
+  {% if cookiecutter.app_uses_django -%}
+  web:
+    image: {{ cookiecutter.app_image_django }}:{% raw %}{{ item.tag }}{% endraw %}
+    command: "/usr/local/bin/gunicorn {{ cookiecutter.app_name }}.wsgi:application -w 3 -b :8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE={{ cookiecutter.app_name }}.swarm_settings
+      {% raw -%}
+      - ENVIRONMENT={{ item.environment }}
+      - HOST_URL={{ item.host_url }}
+    {% endraw -%}
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 100
+      update_config:
+        parallelism: 1
+        monitor: 5s
+        delay: 10s
+    secrets:
+      {% for secret, environment_specific in cookiecutter.app_secrets.items() -%}
+      - {{ cookiecutter.app_name|upper }}_{{ '{{ item.environment }}_' if environment_specific else '' }}{{ secret }}
+      {% endfor -%}
+
+{% raw -%}{% endraw %}
+  celery:
+    image: {{ cookiecutter.app_image_django }}:{% raw %}{{ item.tag }}{% endraw %}
+    command: "celery worker -A {{ cookiecutter.app_name }} --loglevel=ERROR"
+    environment:
+      - DJANGO_SETTINGS_MODULE={{ cookiecutter.app_name }}.swarm_settings
+      {% raw -%}
+      - ENVIRONMENT={{ item.environment }}
+      - HOST_URL={{ item.host_url }}
+      {% endraw -%}
+      - IS_CELERY=true
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 100
+      update_config:
+        parallelism: 1
+        monitor: 5s
+        delay: 10s
+    secrets:
+      {% for secret, environment_specific in cookiecutter.app_secrets.items() -%}
+      - {{ cookiecutter.app_name|upper }}_{{ '{{ item.environment }}_' if environment_specific else '' }}{{ secret }}
+      {% endfor -%}
+
+{% raw -%}{% endraw %}
+  celerybeat:
+    image: {{ cookiecutter.app_image_django }}:{% raw %}{{ item.tag }}{% endraw %}
+    command: "celery beat -A {{ cookiecutter.app_name }} --loglevel=ERROR --pidfile=/tmp/celerybeat.pid"
+    environment:
+      - DJANGO_SETTINGS_MODULE={{ cookiecutter.app_name }}.swarm_settings
+      {% raw -%}
+      - ENVIRONMENT={{ item.environment }}
+      - HOST_URL={{ item.host_url }}
+      {% endraw -%}
+      - IS_CELERY=true
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 100
+      update_config:
+        parallelism: 1
+        monitor: 5s
+        delay: 10s
+    secrets:
+      {% for secret, environment_specific in cookiecutter.app_secrets.items() -%}
+      - {{ cookiecutter.app_name|upper }}_{{ '{{ item.environment }}_' if environment_specific else '' }}{{ secret }}
+      {% endfor -%}
+  {% endif -%}
+
+  {% if cookiecutter.app_uses_rabbitmq %}
+  rabbit:
+    image: rabbitmq:3.7
+    hostname: rabbit
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      update_config:
+        parallelism: 1
+        monitor: 5s
+        delay: 10s
+  {% endif -%}
+
+  {% if cookiecutter.app_uses_redis %}
+  redis:
+    image: redis:4
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      update_config:
+        parallelism: 1
+        monitor: 5s
+        delay: 10s
+  {% endif -%}
+  {% if cookiecutter.app_uses_nginx %}
+  nginx:
+    image: {{ cookiecutter.app_image_nginx }}:{% raw %}{{ item.tag }}{% endraw %}
+    ports:
+      - "8080:80"
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 200
+      update_config:
+        parallelism: 1
+        monitor: 5s
+        delay: 10s
+  {% endif %}
+secrets:
+  {% for secret, environment_specific in cookiecutter.app_secrets.items() -%}
+  {{ cookiecutter.app_name|upper }}_{{ '{{ item.environment }}_' if environment_specific else '' }}{{ secret }}:
+    external: true
+  {% endfor -%}

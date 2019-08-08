@@ -1,0 +1,41 @@
+{# TODO: Currently this just creates a droplet with Docker on it. It should pre-install the runner. -#}
+# Create GitLab Droplet
+resource "digitalocean_droplet" "gitlab" {
+    image = "${data.digitalocean_image.docker.id}"
+    name = "gitlab"
+    region = "${var.region}"
+    size = "s-1vcpu-2gb"
+    private_networking = true
+}
+
+# Create DNS records for the runner
+resource "digitalocean_record" "gitlab" {
+  domain = "${digitalocean_domain.{{ cookiecutter.domain_plain }}.name}"
+  name    = "gitlab"
+  type    = "A"
+  value = "${digitalocean_droplet.gitlab.ipv4_address_private}"
+}
+
+# Set up the security group
+resource "digitalocean_firewall" "gitlab" {
+    name   = "id-gitlab"
+    droplet_ids = ["${digitalocean_droplet.gitlab.id}"]
+
+    inbound_rule {
+        source_tags = ["${digitalocean_tag.vpn.id}"]
+        protocol = "tcp"
+        port_range = "22"
+    }
+
+    outbound_rule {
+        destination_addresses = ["0.0.0.0/0"]
+        protocol = "tcp"
+        port_range = "1-65535"
+    }
+
+    outbound_rule {
+        destination_addresses = ["0.0.0.0/0"]
+        protocol = "udp"
+        port_range = "1-65535"
+    }
+}

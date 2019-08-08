@@ -1,0 +1,13 @@
+{% raw -%}
+- name: set the hostname
+  hostname:
+    name: "{{ hostname }}"
+  when: "'hostname' in hostvars[inventory_hostname]"
+
+- name: add the hostname to /etc/hosts
+  lineinfile:
+    path: "/etc/hosts"
+    line: "127.0.1.1 {{ hostname }}"
+    insertafter: '^127.0.0.1 localhost'
+  when: "'hostname' in hostvars[inventory_hostname]"
+{% endraw -%}

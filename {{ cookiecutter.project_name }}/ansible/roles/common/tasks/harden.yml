@@ -1,0 +1,19 @@
+- name: disable root login
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^PermitRootLogin '
+    line: 'PermitRootLogin no'
+
+- name: disable rsa login
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: 'RSAAuthentication '
+    line: 'RSAAuthentication no'
+
+- name: enable passwordless sudo
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: '^%sudo'
+    line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'

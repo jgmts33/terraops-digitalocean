@@ -1,0 +1,29 @@
+{
+    "project_name": "moby-terraops",
+    "registry_url": "registry-1.docker.io",
+    "users": {
+        "moby": "ssh-rsa AAAAB3NzaC1yc2Emobyhasanawesomepublickey moby@mobydock.com"
+    },
+    "app_name": "moby",
+    "app_secrets": {
+        "SECRET_KEY": true,
+        "DATABASE_PASSWORD": true,
+        "EMAIL_HOST_PASSWORD": false
+    },
+    "app_uses_django": [true, false],
+    "app_uses_rabbitmq": [true, false],
+    "app_uses_redis": [true, false],
+    "app_uses_nginx": [true, false],
+    "app_image_django": "moby/django",
+    "app_image_nginx": "moby/nginx",
+    "digitalocean_region": "nyc3",
+    "domain": "mobydock.com",
+    "domain_plain": "mobydock",
+    "domain_prod": "www",
+    "domain_staging": "staging",
+    "domain_prod_root": [true, false],
+    "domain_vpn": "vpn",
+    "gsuite_google_site_verification": "google-site-verification=mobyisverified",
+    "create_gitlab_runner": [true, false],
+    "your_ssh_username": "moby"
+}

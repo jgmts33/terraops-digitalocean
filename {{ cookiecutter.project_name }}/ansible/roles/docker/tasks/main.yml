@@ -1,0 +1,14 @@
+- import_tasks: preinstall.yml
+  tags:
+    - docker
+    - docker:preinstall
+
+- import_tasks: install.yml
+  tags:
+    - docker
+    - docker:install
+
+- import_tasks: login.yml
+  tags:
+    - docker
+    - docker:login

@@ -1,0 +1,14 @@
+- name: openvpn configuration changed
+  docker_container:
+    name: 'vpn'
+    image: kylemanna/openvpn
+    pull: true
+    state: started
+    recreate: true
+    restart_policy: always
+    capabilities:
+      - NET_ADMIN
+    published_ports:
+      - 1194:1194/udp
+    volumes:
+      - /data/openvpn:/etc/openvpn

@@ -1,0 +1,15 @@
+{% raw -%}
+- name: get deployed stacks
+  shell: "docker stack ls | awk '{if (NR!=1) { print $1 }}'"
+  register: deployed_stacks
+  changed_when: false
+  run_once: true
+
+- name: deploy stacks
+  become: true
+  become_user: ubuntu
+  shell: docker stack deploy -c /data/stacks/{{ item.name }} --with-registry-auth {{ item.name }}
+  when: "item.name not in deployed_stacks.stdout_lines"
+  with_items: "{{ stacks }}"
+  run_once: true
+{% endraw -%}

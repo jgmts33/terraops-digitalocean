@@ -1,0 +1,23 @@
+users:
+  # Public keys also go into terraform-internal/keys.tf
+  {%- for user, public_key in cookiecutter.users.items() %}
+  {{ user }}: {{ public_key }}
+  {%- endfor %}
+
+docker_users:
+  {%- for user in cookiecutter.users %}
+  - {{ user }}
+  {%- endfor %}
+
+stacks:
+  - name: {{ cookiecutter.app_name }}
+    template: ../config/stacks/docker-compose.{{ cookiecutter.app_name }}.yml
+    {% raw -%}
+    environment: "{{ APP_ENVIRONMENT }}"
+    tag: "{{ APP_IMAGE }}"
+    host_url: "{{ HOST_URL }}"
+    {% endraw %}
+secrets:
+  {%- for secret, environment_specific in cookiecutter.app_secrets.items() %}
+  - {{ cookiecutter.app_name|upper }}_{{ '{{ APP_ENVIRONMENT }}_' if environment_specific else '' }}{{ secret }}
+  {%- endfor %}
