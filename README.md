@@ -14,25 +14,25 @@ A lot! Here are the highlights:
 
 ### What are the benefits?
 
-##### Highly-available and self-healing app deployments with Docker Swarm
+#### Highly-available and self-healing app deployments with Docker Swarm
 
 Docker Swarm is an excellent container orchestrator, and this project allows you to easily take advantage of its many features. From the get go, this will set up a highly available cluster that sits behind a load balancer. If some of your managers or workers go down, your cluster will continue functioning while ensuring that all of your containers are still being run.
 
-##### VPN security
+#### VPN security
 
 Leaving SSH access open on servers is a risk, but managing IP lists is tedious and not always reliable. A VPN allows you to connect to servers over the private network, while also only allowing SSH traffic from the VPN. This is also great for databases and other applications with ports that should not be publicly accessible.
 
-##### Automatic secret management
+#### Automatic secret management
 
 Storing secrets in environment variables is a thing of the past! This template makes heavy use of Docker Swarm's secret functionality to securely define secrets and make them available exclusively to the containers that need them. New secrets are automatically added to the Swarm upon re-deploying too!
 
 The template also automatically lets you distinguish between environment-specific secrets, and global secrets (ones that are the same for both staging and prod).
 
-##### Batteries Included
+#### Batteries Included
 
 The included Ansible files set up and secure your Droplets in a standard way, while Packer creates an image that can be used to spin up new Droplets without the need for futher provisioning. Everything is very much "batteries included", and these configurations can absolutely be used without any customization or tweaks.
 
-##### First-class support for Django, Celery, Redis, RabbitMQ and Nginx
+#### First-class support for Django, Celery, Redis, RabbitMQ and Nginx
 
 While entirely optional, if you happen to be deploying a Django app, there's a pre-configured Docker Swarm stack just for you! It comes with built-in support for Django + Gunicorn, Celery (and celerybeat) for tasks, Redis as a cache (or task queue), RabbitMQ as a message broker, and Nginx as a reverse-proxy in front of Gunicorn. The template automatically ensures there's the correct number of processes running on each node in your swarm.
 
@@ -52,11 +52,11 @@ That said, there are some advanced settings that you may want to configure in yo
 2. Edit the `cookiecutter.json` file to suit your needs (options are explained below)
 3. Run `cookiecutter digitalocean-terraops`
 
-##### What do I do after I use cookiecutter?
+#### What do I do after I use cookiecutter?
 
 The generated folder will have its own README file in it that walks you through the steps to get everything deployed! (Spoiler alert, it's _really, really_ easy.)
 
-##### Dependencies?
+#### Dependencies?
 
 Here are the versions of Terraform, Ansible and Packer that I've tested with (it probably works with earlier/later versions too though):
 
@@ -100,10 +100,10 @@ Taking it further, you can also have multiple Docker Swarm clusters. Just run `c
 
 ### FAQ
 
-##### Has this been used in production?
+#### Has this been used in production?
 
 Absolutely. I've been using it in production with multiple apps for years.
 
-##### DigitalOcean is awesome, but what about AWS or (other provider)?
+#### DigitalOcean is awesome, but what about AWS or (other provider)?
 
 I have a version of terraops for AWS as well, I just haven't created a cookiecutter template for it yet. That one supports even more functionality (multiple VPCs, Network ACLs, auto-scaling Docker Swarm nodes, etc). If this is something you need, let me know and I'll try to get around to porting that one to cookiecutter.
